@@ -164,7 +164,7 @@ function ViewportFrameUtility:ToggleZooming(state: boolean): ()
    local minimumZoomDistance = 5
    local maximumZoomDistance = 10
 
-   self.ZoomConnection = self.ViewportFrame.InputChanged:Connect(function(input)
+   self.ZoomConnection = self.ViewportFrame.InputChanged:Connect(function(input: InputObject)
       if input.UserInputType == Enum.UserInputType.MouseWheel then
          local zoomDistance = (camera.CFrame.Position - self.Model:GetPivot().Position).Magnitude
 
