@@ -169,9 +169,9 @@ function ViewportFrameUtility:ToggleZooming(state: boolean): ()
 			local zoomDistance = (camera.CFrame.Position - self.Model:GetPivot().Position).Magnitude
 
 			if input.Position.Z > 0 and zoomDistance > minimumZoomDistance then
-				self.ZoomOffset = math.exp(math.clamp(self.ZoomOffset - 1, -2, 5))
+				self.ZoomOffset = math.clamp(self.ZoomOffset - 1, -2, 5)
 			elseif input.Position.Z < 0 and zoomDistance < maximumZoomDistance then
-				self.ZoomOffset = math.exp(math.clamp(self.ZoomOffset + 1, -2, 5))
+				self.ZoomOffset = math.clamp(self.ZoomOffset + 1, -2, 5)
 			end
 		end
 	end)
