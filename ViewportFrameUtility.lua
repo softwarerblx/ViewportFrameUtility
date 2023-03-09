@@ -135,7 +135,7 @@ function ViewportFrameUtility:ResetCamera(): ()
    local speed = 0.1
    
    while (self.Camera.CFrame.Position - self.StartCFrame.Position).Magnitude > 0.01 do
-      self.Camera.CFrame = self.Camera.CFrame:Lerp(self.StartCFrame:Orthonormalize(), speed)
+      self.Camera.CFrame = self.Camera.CFrame:Lerp(self.StartCFrame, speed)
       
       task.wait()
    end
@@ -274,7 +274,7 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
             CFrame.Angles(xRotation, 0, 0) *
             CFrame.new(-self.Model:GetPivot().Position) *
             CFrame.new(0, 0, self.ZoomOffset) *
-            self.StartCFrame:Orthonormalize()
+            self.StartCFrame
          local interpolationFactor = math.min(1, math.max(0, 6 * deltaTime))
 
          camera.CFrame = camera.CFrame:Lerp(targetCFrame, interpolationFactor)
@@ -290,7 +290,7 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
 
             camera.CFrame = targetCFrame
          else
-            local targetCFrame = self.StartCFrame:Orthonormalize() * CFrame.new(0, 0, self.ZoomOffset)
+            local targetCFrame = self.StartCFrame * CFrame.new(0, 0, self.ZoomOffset)
             local interpolationFactor = math.min(1, math.max(0, 6 * deltaTime))
 
             camera.CFrame = camera.CFrame:Lerp(targetCFrame, interpolationFactor)
