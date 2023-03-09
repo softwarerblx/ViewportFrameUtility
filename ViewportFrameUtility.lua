@@ -150,31 +150,31 @@ end
 ]]
 
 function ViewportFrameUtility:ToggleZooming(state: boolean): ()
-   if not state then
-      if self.ZoomConnection then
-         self.ZoomConnection:Disconnect()
-         self.ZoomConnection = nil
-      end
-      
-      return
-   end
+	if not state then
+		if self.ZoomConnection then
+			self.ZoomConnection:Disconnect()
+			self.ZoomConnection = nil
+		end
 
-   local camera = self.Camera
-   
-   local minimumZoomDistance = 5
-   local maximumZoomDistance = 10
+		return
+	end
 
-   self.ZoomConnection = self.ViewportFrame.InputChanged:Connect(function(input: InputObject)
-      if input.UserInputType == Enum.UserInputType.MouseWheel then
-         local zoomDistance = (camera.CFrame.Position - self.Model:GetPivot().Position).Magnitude
+	local camera = self.Camera
 
-         if input.Position.Z > 0 and zoomDistance > minimumZoomDistance then
-            self.ZoomOffset -= 1
-         elseif input.Position.Z < 0 and zoomDistance < maximumZoomDistance then
-            self.ZoomOffset += 1
-         end
-      end
-   end)
+	local minimumZoomDistance = 5
+	local maximumZoomDistance = 10
+
+	self.ZoomConnection = self.ViewportFrame.InputChanged:Connect(function(input: InputObject)
+		if input.UserInputType == Enum.UserInputType.MouseWheel then
+			local zoomDistance = (camera.CFrame.Position - self.Model:GetPivot().Position).Magnitude
+
+			if input.Position.Z > 0 and zoomDistance > minimumZoomDistance then
+				self.ZoomOffset = math.exp(math.clamp(self.ZoomOffset - 1, -2, 5))
+			elseif input.Position.Z < 0 and zoomDistance < maximumZoomDistance then
+				self.ZoomOffset = math.exp(math.clamp(self.ZoomOffset + 1, -2, 5))
+			end
+		end
+	end)
 end
 
 --[[
