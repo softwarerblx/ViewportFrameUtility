@@ -108,7 +108,7 @@ end
 ]]
 
 function ViewportFrameUtility:GetFitDistance(focusPosition: Vector3): number
-	local displacement = focusPosition and (focusPosition - self.ModelCFrame.Position).Magnitude or 0
+	local displacement = if focusPosition then (focusPosition - self.ModelCFrame.Position).Magnitude else 0
 	local radius = self.ModelRadius + displacement
 
 	return radius / self.ViewportData.SinCFov2
