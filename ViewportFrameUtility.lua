@@ -118,7 +118,7 @@ end
 
 function ViewportFrameUtility:FitModel(): ()
 	local camera = self.Camera
-	local cframe, size = self.Model:GetBoundingBox()
+	local cframe = self.Model:GetBoundingBox()
 
 	self.Model:PivotTo(self.Model:GetPivot() * CFrame.Angles(0, math.rad(180), 0))
 
