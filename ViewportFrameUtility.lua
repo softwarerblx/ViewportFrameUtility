@@ -33,10 +33,14 @@ type self = {
 	FitModel: () -> (),
 	ResetCamera: () -> (),
 	Calibrate: () -> (),
-	ToggleAnimation: (state: boolean) -> (),
-	ToggleDragging: (state: boolean) -> (),
-	ToggleZooming: (state: boolean) -> (),
-	ToggleOrbiting: (state: boolean) -> (),
+	EnableAnimation: () -> (),
+	DisableAnimation: () -> (),
+	EnableDragging: () -> (),
+	DisableDragging: () -> (),
+	EnableZooming: () -> (),
+	DisableZooming: () -> (),
+	EnableOrbiting: () -> (),
+	DisableOrbiting: () -> (),
 
 	InputBeganConnection: RBXScriptConnection?,
 	InputChangedConnection: RBXScriptConnection?,
@@ -143,22 +147,9 @@ function ViewportFrameUtility:ResetCamera(): ()
 	self.IsLerping = false
 end
 
---[[
-	Enables or disables zooming on the ViewportFrame to zoom in and out of the model
+-- Enables zooming on the ViewportFrame to zoom in and out of the model
 
-	@param state A boolean value indicating whether to enable or disable zooming
-]]
-
-function ViewportFrameUtility:ToggleZooming(state: boolean): ()
-	if not state then
-		if self.ZoomConnection then
-			self.ZoomConnection:Disconnect()
-			self.ZoomConnection = nil
-		end
-
-		return
-	end
-
+function ViewportFrameUtility:EnableZooming(): ()
 	local camera = self.Camera
 
 	local minimumZoomDistance = 5
@@ -177,30 +168,15 @@ function ViewportFrameUtility:ToggleZooming(state: boolean): ()
 	end)
 end
 
---[[
-	Enables or disables dragging on the ViewportFrame to rotate the camera around the model
+-- Disables zooming on the ViewportFrame
 
-	@param state A boolean value indicating whether dragging should be enabled or disabled
-]]
+function ViewportFrameUtility:DisableZooming(): ()
+	self.ZoomConnection:Disconnect()
+end
 
-function ViewportFrameUtility:ToggleDragging(state: boolean): ()
-	if not state then
-		if self.InputBeganConnection then
-			self.InputBeganConnection:Disconnect()
-			self.InputBeganConnection = nil
-		end
+-- Enables dragging on the ViewportFrame to rotate the camera around the model
 
-		if self.InputChangedConnection then
-			self.InputChangedConnection:Disconnect()
-			self.InputChangedConnection = nil
-		end
-
-		if self.InputEndedConnection then
-			self.InputEndedConnection:Disconnect()
-			self.InputEndedConnection = nil
-		end
-	end
-
+function ViewportFrameUtility:EnableDragging(): ()
 	local function updateInput(input: InputObject): ()
 		if self.IsDragging then
 			self.Delta = input.Position - self.DragStartPosition
@@ -236,32 +212,40 @@ function ViewportFrameUtility:ToggleDragging(state: boolean): ()
 	end)
 end
 
---[[
-	Enables or disables automatic orbiting of the camera around the model
+-- Disables dragging on the ViewportFrame
 
-	@param state A boolean value indicating whether automatic orbiting should be enabled or disabled
-]]
-
-function ViewportFrameUtility:ToggleOrbiting(state: boolean): ()
-	self.IsOrbiting = state
-end
-
---[[
-	Enables or disables animation on the ViewportFrame to animate the camera
-
-	@param state A boolean value indicating whether dragging should be enabled or disabled
-]]
-
-function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
-	if not state then
-		if self.RenderSteppedConnection then
-			self.RenderSteppedConnection:Disconnect()
-			self.RenderSteppedConnection = nil
-		end
-
-		return
+function ViewportFrameUtility:DisableDragging(): ()
+	if self.InputBeganConnection then
+		self.InputBeganConnection:Disconnect()
+		self.InputBeganConnection = nil
 	end
 
+	if self.InputChangedConnection then
+		self.InputChangedConnection:Disconnect()
+		self.InputChangedConnection = nil
+	end
+
+	if self.InputEndedConnection then
+		self.InputEndedConnection:Disconnect()
+		self.InputEndedConnection = nil
+	end
+end
+
+-- Enables automatic orbiting of the camera around the model
+
+function ViewportFrameUtility:EnableOrbiting(): ()
+	self.IsOrbiting = true
+end
+
+-- Disables automatic orbiting of the camera around the model
+
+function ViewportFrameUtility:DisableOrbiting(): ()
+	self.IsOrbiting = false
+end
+
+-- Enables automatic animation of the camera around the model
+
+function ViewportFrameUtility:EnableAnimation(): ()
 	local function updateDt(deltaTime: number)
 		local camera = self.Camera
 		local delta = self.Delta
@@ -299,6 +283,15 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
 	end
 
 	self.RenderSteppedConnection = RunService.RenderStepped:Connect(updateDt)
+end
+
+-- Disables automatic animation of the camera around the model
+
+function ViewportFrameUtility:DisableAnimation(): ()
+	if self.RenderSteppedConnection then
+		self.RenderSteppedConnection:Disconnect()
+		self.RenderSteppedConnection = nil
+	end
 end
 
 return ViewportFrameUtility

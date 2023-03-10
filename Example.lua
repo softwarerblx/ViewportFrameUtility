@@ -13,13 +13,13 @@ local viewportFrameUtility = ViewportFrameUtility.new(viewportFrame, workspace.D
 viewportFrameUtility:FitModel()
 
 -- Enables animation for the ViewportFrame
-viewportFrameUtility:ToggleAnimation(true)
+viewportFrameUtility:EnableAnimation()
 
 -- Enables dragging for the ViewportFrame
-viewportFrameUtility:ToggleDragging(true)
+viewportFrameUtility:EnableDragging()
 
 -- Enables zooming for the ViewportFrame
-viewportFrameUtility:ToggleZooming(true)
+viewportFrameUtility:EnableZooming()
 
 -- Enables orbiting for the ViewportFrame
-viewportFrameUtility:ToggleOrbiting(true)
+viewportFrameUtility:EnableOrbiting()
