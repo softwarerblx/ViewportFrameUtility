@@ -28,7 +28,7 @@ type self = {
    IsLerping: boolean,
    IsDragging: boolean,
    IsOrbiting: boolean,
-   
+
    GetFitDistance: () -> (number),
    FitModel: () -> (),
    ResetCamera: () -> (),
@@ -49,7 +49,7 @@ type ViewportFrameUtility = typeof(setmetatable({}, ViewportFrameUtility))
 
 --[[
    Creates a new instance of the utility class
-   
+
    @param viewportFrame The viewport frame to display the model in
    @param model The model to display in the viewport frame
    @return A new instance of ViewportFrameUtility
@@ -59,7 +59,7 @@ function ViewportFrameUtility.new(viewportFrame: ViewportFrame, model: Model): a
    local cframe: CFrame, size: Vector3 = model:GetBoundingBox()
 
    local self = setmetatable({}, ViewportFrameUtility)
-   
+
    self.Model = model:Clone()
    self.Model.Parent = viewportFrame
    self.Camera = Instance.new("Camera")
@@ -67,7 +67,7 @@ function ViewportFrameUtility.new(viewportFrame: ViewportFrame, model: Model): a
    self.ViewportFrame = viewportFrame
    self.ViewportFrame.CurrentCamera = self.Camera
    self.ModelCFrame = cframe
-   self.ModelSize = size	
+   self.ModelSize = size
    self.ModelRadius = size.Magnitude / 2
    self.ViewportData = {}
    self.ZoomOffset = 0
@@ -100,11 +100,11 @@ function ViewportFrameUtility:Calibrate(): ()
    self.ViewportData = viewport
 end
 
---[[ 
-   Calculates and returns a distance between the camera and model that would fit it perfectly into the ViewportFrame 
-   
+--[[
+   Calculates and returns a distance between the camera and model that would fit it perfectly into the ViewportFrame
+
    @param focusPosition An optional position vector that can be used as a focal point for fitting (default is nil)
-   @return A number representing the distance between the Camera and Model that would fit it perfectly into the ViewportFrame 
+   @return A number representing the distance between the Camera and Model that would fit it perfectly into the ViewportFrame
 ]]
 
 function ViewportFrameUtility:GetFitDistance(focusPosition: Vector3): number
@@ -119,11 +119,11 @@ end
 function ViewportFrameUtility:FitModel(): ()
    local camera = self.Camera
    local cframe, size = self.Model:GetBoundingBox()
-   
+
    self.Model:PivotTo(self.Model:GetPivot() * CFrame.Angles(0, math.rad(180), 0))
-   
+
    camera.CFrame = cframe * CFrame.new(0, 0, self:GetFitDistance(self.Model:GetPivot().Position))
-   
+
    self.StartCFrame = camera.CFrame:Orthonormalize()
 end
 
@@ -131,19 +131,19 @@ end
 
 function ViewportFrameUtility:ResetCamera(): ()
    self.IsLerping = true
-   
+
    local speed = 0.1
-   
+
    while (self.Camera.CFrame.Position - self.StartCFrame.Position).Magnitude > 0.01 do
       self.Camera.CFrame = self.Camera.CFrame:Lerp(self.StartCFrame, speed)
-      
+
       task.wait()
    end
-   
+
    self.IsLerping = false
 end
 
---[[ 
+--[[
    Enables or disables zooming on the ViewportFrame to zoom in and out of the model
 
    @param state A boolean value indicating whether to enable or disable zooming
@@ -207,7 +207,7 @@ function ViewportFrameUtility:ToggleDragging(state: boolean): ()
          self.xRotation = math.clamp(-self.Delta.Y / 100, -math.pi / 2, math.pi / 2)
       end
    end
-   
+
    self.InputBeganConnection = self.ViewportFrame.InputBegan:Connect(function(input: InputObject)
       if self.IsLerping then
          return
@@ -236,7 +236,7 @@ function ViewportFrameUtility:ToggleDragging(state: boolean): ()
    end)
 end
 
---[[ 
+--[[
    Enables or disables automatic orbiting of the camera around the model
 
    @param state A boolean value indicating whether automatic orbiting should be enabled or disabled
@@ -246,19 +246,19 @@ function ViewportFrameUtility:ToggleOrbiting(state: boolean): ()
    self.IsOrbiting = state
 end
 
---[[ 
+--[[
    Enables or disables animation on the ViewportFrame to animate the camera
 
    @param state A boolean value indicating whether dragging should be enabled or disabled
 ]]
 
 function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
-   if not state then	
+   if not state then
       if self.RenderSteppedConnection then
          self.RenderSteppedConnection:Disconnect()
          self.RenderSteppedConnection = nil
       end
-      
+
       return
    end
 
@@ -267,7 +267,7 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
       local delta = self.Delta
       local xRotation = self.xRotation
       local isDragging = self.IsDragging
-      
+
       if isDragging then
          local targetCFrame = CFrame.new(self.Model:GetPivot().Position) *
             CFrame.Angles(0, -delta.X / 100, 0) *
@@ -280,7 +280,7 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
          camera.CFrame = camera.CFrame:Lerp(targetCFrame, interpolationFactor)
       else
          local orbiting = self.IsOrbiting
-         
+
          if orbiting then
             local pivotPosition = self.Model:GetPivot().Position
             local targetCFrame = CFrame.new(pivotPosition) *
@@ -297,7 +297,7 @@ function ViewportFrameUtility:ToggleAnimation(state: boolean): ()
          end
       end
    end
-   
+
    self.RenderSteppedConnection = RunService.RenderStepped:Connect(updateDt)
 end
 
