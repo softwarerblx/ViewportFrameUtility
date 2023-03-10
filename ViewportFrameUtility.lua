@@ -72,8 +72,8 @@ function ViewportFrameUtility.new(viewportFrame: ViewportFrame, model: Model): a
 	self.ViewportData = {}
 	self.ZoomOffset = 0
 	self.xRotation = 0
-	self.Delta = Vector2.new()
-	self.DragStartPosition = Vector3.new()
+	self.Delta = Vector2.zero
+	self.DragStartPosition = Vector3.zero
 
 	self:Calibrate()
 
